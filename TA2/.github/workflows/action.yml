@@ -1,0 +1,16 @@
+﻿name: My build and deploy aciton
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-and-deploy-job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Login to container registry
+        run: |
+          docker login https://ghcr.io -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_KEY}}
+      - name: Build and psh image to registry
+        run: |
+          docker buildx build --push -t ${{ secrets.DOCKER_TAG }} .
